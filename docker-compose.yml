@@ -1,0 +1,29 @@
+version: '3'
+services:
+  mongo:
+    image: mongo
+    container_name: cv-manager-mongo
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo-data:/data/db
+    env_file:
+      - path: .mongo.env
+        required: true
+  app:
+    container_name: cv-manager
+    tty: true
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./:/node/home/
+      - /node/home/node_modules
+      - /node/home/mongo-data
+    ports:
+      - 8080:${PORT}
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    command: "npx nodemon"
