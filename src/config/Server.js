@@ -1,8 +1,9 @@
 const express = require('express');
 //const cors = require('cors');
 const { mongoConnection } = require("./mongoConnection");
-const userRoute = require("../routes/userRoute");
-const authRoute = require("../routes/authRoute");
+//const userRoute = require("../routes/userRoute");
+//const authRoute = require("../routes/authRoute");
+const routes = require("../routes");
 
 class Server {
 	constructor(){
@@ -10,7 +11,7 @@ class Server {
 		this.port = process.env.PORT;
 		this.connectDB();
 		this.middlewares();
-		this.routes();
+		this.configRoutes();
 	}
 
 	async connectDB(){
@@ -25,9 +26,9 @@ class Server {
 		this.app.use(express.static('public'));
 	}
 
-	routes(){
-		this.app.use(userRoute.path, userRoute.router);
-		this.app.use(authRoute.path, authRoute.router);
+	configRoutes(){
+		for(let i in routes)
+			this.app.use(routes[i].path, routes[i].router);
 	}
 
 	listen(){
